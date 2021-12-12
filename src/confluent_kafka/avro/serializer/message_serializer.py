@@ -24,6 +24,7 @@ import logging
 import struct
 import sys
 import traceback
+import json
 
 import avro
 import avro.io
@@ -79,7 +80,7 @@ class MessageSerializer(object):
     # Encoder support
     def _get_encoder_func(self, writer_schema):
         if HAS_FAST:
-            schema = writer_schema.to_json()
+            schema = json.loads(str(writer_schema))
             parsed_schema = parse_schema(schema)
             return lambda record, fp: schemaless_writer(fp, parsed_schema, record)
         writer = avro.io.DatumWriter(writer_schema)
